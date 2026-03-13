@@ -1,0 +1,89 @@
+<script id="NOtriggerVCV-legacy">
+document.addEventListener('DOMContentLoaded', function() {
+    // Function to get input by label text
+    function getInputByLabel(labelText) {
+        const label = Array.from(document.querySelectorAll('label')).find(label => label.textContent.trim() === labelText);
+        return label ? label.closest('li').querySelector('input') : null; // Get the input within the same <li>
+    }
+
+    // Get the target fields for true values
+    const volunteerInput = getInputByLabel('Interestedin-Volunteer');
+    const careerInput = getInputByLabel('Interestedin-Career');
+    const vendorInput = getInputByLabel('Interestedin-Vendor');
+
+    // Log the retrieved input fields
+    console.log('Volunteer Input:', volunteerInput);
+    console.log('Career Input:', careerInput);
+    console.log('Vendor Input:', vendorInput);
+
+    // Function to check if the parent is visible and set the input value
+    function checkAndSetValue(inputField) {
+        if (inputField) {
+            const parentLi = inputField.closest('li');
+            const isVisible = parentLi.style.display !== 'none'; // Check if the display style is not 'none'
+
+            // Debugging: Log the visibility status
+            console.log(`Visibility of ${inputField.name}: ${isVisible}`);
+
+            // If the parent is visible, set the input value to 'true'
+            if (isVisible) {
+                inputField.value = 'true';
+                console.log(`Setting ${inputField.name} to true`);
+            } else {
+                console.log(`${inputField.name} is hidden (display: none)`);
+            }
+        } else {
+            console.log(`Input field not found.`);
+        }
+    }
+
+    // Check each input field
+    checkAndSetValue(volunteerInput);
+    checkAndSetValue(careerInput);
+    checkAndSetValue(vendorInput);
+});
+</script>
+
+<script id="VCVno-nonlegacy">
+document.addEventListener('DOMContentLoaded', function() {
+    // Get the label element by its text
+    var label = Array.from(document.querySelectorAll('label.gfield_label')).find(label => label.textContent.trim() === 'NOTrigger');
+
+    if (label) {
+        // Get the parent <div> element
+        var notriggerField = label.closest('div.gfield'); // The <div> element containing the input
+        var notriggerInput = notriggerField.querySelector('input[type="text"]'); // The <input> element
+
+        // Initialize the input value to empty
+        notriggerInput.value = '';
+
+        function updateInputValue() {
+            // Check if the parent <div> is hidden
+            if (notriggerField.style.display === 'none') {
+                // If hidden, set the input value to empty
+                notriggerInput.value = '';
+            } else {
+                // If visible, set the input value to "True"
+                notriggerInput.value = 'True';
+            }
+        }
+
+        // Initial check
+        updateInputValue();
+
+        // Observe changes in the form to update the input value accordingly
+        var observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'style' || mutation.attributeName === 'data-conditional-logic') {
+                    updateInputValue();
+                }
+            });
+        });
+
+        // Start observing the parent <div> for attribute changes
+        observer.observe(notriggerField, {
+            attributes: true // Watch for attribute changes
+        });
+    }
+});
+</script>
